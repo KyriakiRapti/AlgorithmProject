@@ -25,26 +25,9 @@ double Marsaglia() //gauss kanonikh metavliti
 double randomNumberDouble(double from, double to)
 {
     return from + ((double)rand() / RAND_MAX)*(to-from);
-    //return from + ((double)rand() / RAND_MAX+1.0)*(to-from);
 }
 
 int randomNumberInt(int from, int to) //epistrefei akeraio mesa sto diastima
 {
-    //return from + (rand() / (RAND_MAX+1.0))*(to-from+1);
-    //return from + (rand() / (RAND_MAX + 1.0))*(to-from);
     return from + rand()%(int)(to-from+1);
-}
-
-
-int randomNumberInteger() //epistrefei enan akeraio thetiko 'h arnitiko
-{
-    int x = rand();
-    if(rand()%2)
-    {
-        return x;
-    }
-    else
-    {
-        return -x;
-    }
 }

@@ -24,6 +24,11 @@ int EuclideanNode::get_ID()
     return ID;
 }
 
+std::string EuclideanNode::get_string()
+{
+    return data->get_string();
+}
+
 void EuclideanNode::set_ID(int id)
 {
     ID = id;

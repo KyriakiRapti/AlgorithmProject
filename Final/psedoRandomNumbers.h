@@ -5,7 +5,4 @@ void initialize();
 double Marsaglia();
 double randomNumberDouble(double from, double to);
 int randomNumberInt(int from, int to);
-int randomNumberInteger();
-
-//int mod(int)
 #endif

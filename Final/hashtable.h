@@ -9,14 +9,13 @@ template <class T>
 class HashTable
 {
     private:
-        //const int keySize;
         int nBuckets;
         int totalSize;
         List<T>** buckets;
         HashFunction<T>* gFunction;
 
-        unsigned int hashFunction(T key); //auto tha mporouse na einai 4-6 bits anti gia int, 'h estw char
-        //bool checkID(int id);
+        unsigned int hashFunction(T key);
+
     public:
         HashTable(int NBuckets, HashFunction<T>* hashMethod);
         ~HashTable();
@@ -28,19 +27,10 @@ class HashTable
         Node<T>* get_bucket(T key);
 
         void insertNode(T data);
-        //template <> void insertNode<EuclideanNode*>(Vector* data);
 
+        bool checkEmpty();
         void printSizeOfBuckets();
 };
-
-/*template<>
-void HashTable<EuclideanNode*>::insertNode(EuclideanNode* data)
-{
-    totalSize++;
-
-    data->set_ID(gFunction->hashFunctionID(data));
-    buckets[hashFunction(data)]->insertEnd(data);
-}*/
 
 #endif
 

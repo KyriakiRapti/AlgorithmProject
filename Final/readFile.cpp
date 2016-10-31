@@ -10,7 +10,6 @@ using namespace std;
 int readFile(ifstream& inFile, string& type, List<Vector*>* myList1, List<Hamming*>* myList2, List<MatrixPoint*>* myList3)
 {
     string line;
-    //ifstream inFile;
     string name, tag;
     double value;
 
@@ -23,7 +22,7 @@ int readFile(ifstream& inFile, string& type, List<Vector*>* myList1, List<Hammin
         if(!iss) return 1;
         if(tag != "@metric_space") return 1; //perimenoume auto to tag
 
-        if(type == "vector" || type == "euclidean") //euclidean to afairw einai mono gia to arxeio pou dwthhke
+        if(type == "vector")
         {
             if(!getline(inFile, line)) return 1;// error sto read
 
@@ -37,188 +36,175 @@ int readFile(ifstream& inFile, string& type, List<Vector*>* myList1, List<Hammin
                 if(type !="euclidean" && type !="cosine") return 1; //lathos dedomena
                 line = ""; //dn pira seira me dedomena
             }
-            else
+            else //dn eixe grammi gia typo ara me default pairnw euclidean
             {
                 type ="euclidean";
             }
-            //List<Vector*>* tmpList = new List<Vector*>();
-            readVectorFile(inFile, line, myList1);
-            /*for(Node<Vector*>*i = myList1->get_begin(); i != NULL; i =i->get_next())
-            {
-                cout<<i->get_data()->get_coordinance(1)<<endl;
-            }*/
 
-            //
-            //lshCosine(tmpList, NULL, 5, 4, 0);
-            //klhsh lsh gia vector
-            //cout<<type<<endl;
-        }
+            if(!readVectorFile(inFile, line, myList1)) //an den diavastikan swsta epistrefw sfalma
+            {
+                return 2;
+            }
+         }
         else if(type == "hamming")
         {
-            bitset<64> f;
-            //List<Hamming*>*tmpList = new List<Hamming*>();
-            readHammingFile(inFile, myList2);
-            /*for(Node<Hamming*>* i = myList2->get_begin(); i !=NULL; i = i->get_next())
+            if(!readHammingFile(inFile, myList2)) //an dn diavastei swsta epistrefw sfalma
             {
-                i->get_data()->get_bitString(f);
-                cout<<f<<endl;
-            }*/
+                return 3;
+            }
+
         }
         else if(type == "matrix")
         {
-            //List<MatrixPoint*>* myList = new List<MatrixPoint*>();
-            readMatrixFile(inFile, myList3);
-
-
-            //for(Node<MatrixPoint*>* i = myList->get_begin(); i !=NULL; i = i->get_next())
-
-            MatrixPoint* d = myList3->get_begin()->get_data();
-            /*for(int i=0;i< d->get_noItems(); i++)
+            if(!readMatrixFile(inFile, myList3)) //an dn diavastei swsta epistrefw sfalma
             {
-                cout<<d->get_distance(i)<<endl;
-            }*/
-
+                return 4;
+            }
 
         }
         else //error
         {
-        //getline(inFile, line);
-        //getline(inFile, line);
-//cout<<line;
             return 1;
         }
     }
+    else
+    {
+        return 1;
+    }
+
     return 0;
 }
 
-void readVectorFile(ifstream& inFile, string& line, List<Vector*>* myList)
+bool readVectorFile(ifstream& inFile, string& line, List<Vector*>* myList)
 {
     string name;
     double value;
-    bool knowDimensions = false;
-    List<double>* tmpList = new List<double>();
     double* myArray;
-    int i, dimensions;
+    int dimensions;
     Vector* data;
 
-    if(line == "")
+    if(line == "") //den pira seira dedomenwn prin
     {
-        if(!getline(inFile, line)) return; //diavazw mia grammh
+        if(!getline(inFile, line)) return false; //diavazw mia grammh
     }
 
+    istringstream iss(line); //metrame tis diastaseis tou pinaka
+    iss>>name;
+    dimensions = 0;
+    while(true)
+    {
+        iss>> value;
+        if(!iss) break;
+        dimensions++;
+    }
+
+    myArray = new double[dimensions];
     do
     {
         istringstream iss(line);
 
         iss>> name;
-        i=0;
-        while(true)
+        for(int i =0; i <dimensions; i++)
         {
             iss>>value;
-            if(!iss) break;
+            if(!iss) return false;
 
-            if(knowDimensions == false)
-            {
-                tmpList->insertEnd(value);
-            }
-            else
-            {
-                if(i >= dimensions) return ; //dn einai idies diastaseis
-                myArray[i]=value;
-                i++;
-            }
-        }
-
-        if(knowDimensions == false)
-        {
-            myArray = new double[tmpList->getSize()];
-            dimensions = tmpList->getSize();
-            for(int i=0; i<dimensions; i++)
-            {
-                myArray[i] = tmpList->deleteFirstNode();
-            }
-            delete tmpList;
-
-            knowDimensions = true;
+            myArray[i] = value;
         }
 
         data = new Vector(name, dimensions, myArray);
         myList->insertEnd(data);
-        //cout<<dimensions<<endl;
 
     }while(getline(inFile, line));
 
-    delete myArray;
+    delete[] myArray;
+
+    return true;
 }
 
-void readHammingFile(ifstream& inFile, List<Hamming*>* myList)
+bool readHammingFile(ifstream& inFile, List<Hamming*>* myList)
 {
-    string line, name;
+    string line, name, bitsString;
     Hamming* data;
     bitset<64> value;
+    bool firstTime = true;
+    int countBits;
 
     while(getline(inFile, line))
     {
-        //cout<<line<<endl;
+        if(firstTime) //metrame to plithos twn bits
+        {
+            istringstream iss(line);
+
+            iss>> name >> bitsString; //to value tha einai 64 bit
+            if(!iss) return false;
+            countBits = bitsString.length(); //plithos bits
+            firstTime = false;
+
+        }
         istringstream iss(line);
 
         iss>> name >> value; //to value tha einai 64 bit
-        if(!iss) return;
+        if(!iss) return false;
 
-        data= new Hamming(name, value);
+        data= new Hamming(name, value, countBits);
         myList->insertEnd(data);
     }
+
+    return true;
 }
 
 
-void readMatrixFile(ifstream& inFile, List<MatrixPoint*>* myList)
+bool readMatrixFile(ifstream& inFile, List<MatrixPoint*>* myList)
 {
-    //jagged array ennalaktika
     string line, name, commaLine;
-    int value, i, items;
+    int value, i, pos, items;
     int* tempArray;
     List<string> itemIds;
     MatrixPoint* point;
 
-    if(!getline(inFile, line)) return;
+    if(!getline(inFile, line)) return false;
     istringstream iss(line);
     iss >> name;
-    if(!iss) return;
+    if(!iss) return false;
 
-    if(name != "@items") return;
+    if(name != "@items") return false;
 
-    while(getline(iss, name, ','))
+    while(getline(iss, name, ',')) //ta ids xwrizontai me komma ara ta pairnw etsi
     {
-
-        itemIds.insertEnd(name);
+        itemIds.insertEnd(name); //vazw ta Ids sthn lista
     }
-    items = itemIds.getSize();
+
+    items = itemIds.getSize(); //ypologizw to synolo twn ids
     tempArray = new int[items];
-    while(getline(inFile, line))
+
+    pos=0; //tha krataw kai pio stoixeio einai gia na mporw na vrw thn apostash kapoiou shmeiou apo auto
+    while(getline(inFile, line)) //diavazw twra tis apostaseis
     {
-        //cout<<line<<endl;
-        i = 0;
         istringstream iss(line);
         for(int i = 0; i < items; i++)
         {
             iss>>value;
-            if(!iss) return; //diavastikan ligotera exoume kapoio error
+            if(!iss) return false; //diavastikan ligotera exoume kapoio error
 
             tempArray[i] = value;
         }
-        point = new MatrixPoint(itemIds.get_begin()->get_data(), tempArray, items);
-        itemIds.deleteFirstNode(); //afairoume to stoixeio apo thn lista
+        point = new MatrixPoint(itemIds.get_begin()->get_data(), tempArray, items, pos);
+        itemIds.deleteFirstNode(); //afairoume to prwto Id string apo thn lista
         myList->insertEnd(point);
+        pos++;
     }
 
-    delete tempArray;
+    delete[] tempArray;
+
+    return true;
 }
 
 bool readMatrixQuery(std::ifstream& inFile, List<MatrixPoint*>* queryList)
 {
     string name, line;
     MatrixPoint* data;
-    int value, counter = 0;
+    int value, pos = 0, counter = 0;
     int* tmpArray;
     //bitset<64> value;
 
@@ -232,7 +218,7 @@ bool readMatrixQuery(std::ifstream& inFile, List<MatrixPoint*>* queryList)
         counter++;
     }
     tmpArray = new int[counter];
-
+    pos = 0;
     do
     {
         istringstream iss(line);
@@ -244,11 +230,13 @@ bool readMatrixQuery(std::ifstream& inFile, List<MatrixPoint*>* queryList)
             tmpArray[i] = value;
         }
 
-        data = new MatrixPoint(name, tmpArray, counter);
+        data = new MatrixPoint(name, tmpArray, counter, pos);
         queryList->insertEnd(data);
+        pos++;
     }while(getline(inFile, line));
 
     delete[] tmpArray;
+
     return true;
 }
 
@@ -261,8 +249,9 @@ bool readRadius(std::ifstream& inFile, double& radius)
         istringstream iss(line);
 
         iss>> name >> radius;
-        if(!iss) return 1;
+        if(!iss) return false;
         if(name != "Radius:") return false; //perimenoume auto to tag
     }
 
+    return true;
 }

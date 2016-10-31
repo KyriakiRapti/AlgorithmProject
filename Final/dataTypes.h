@@ -46,8 +46,10 @@ class Hamming
     private:
         std::string id;
         std::bitset<64> bitString;
+         const int noBits;
+
     public:
-        Hamming(std::string ID, std::bitset<64> bitSet)
+        Hamming(std::string ID, std::bitset<64> bitSet, int nBits): noBits(nBits)
         {
             id = ID;
             bitString = bitSet;
@@ -62,17 +64,22 @@ class Hamming
         {
             data = bitString;
         }
+
+        int get_noBits()
+        {
+            return noBits;
+        }
 };
 
 class MatrixPoint
 {
     private:
         std::string id;
-        const int N;
+        const int N, position;
         int* distances;
 
     public:
-        MatrixPoint(std::string ID, int* dist,  int n): N(n)
+        MatrixPoint(std::string ID, int* dist,  int n, int pos): N(n), position(pos)
         {
             id = ID;
             distances = new int[N];
@@ -98,6 +105,11 @@ class MatrixPoint
         {
             if(pos >= N) return -9999;
             return distances[pos];
+        }
+
+        int get_pos()
+        {
+            return position;
         }
 };
 #endif

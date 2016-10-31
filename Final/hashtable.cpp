@@ -1,7 +1,7 @@
-#include "hashtable.h"
 #include <cstdlib>
 #include <iostream>
-//#include "bankAccount.h"
+
+#include "hashtable.h"
 #include "hashFunction.h"
 #include "euclideanNode.h"
 
@@ -15,13 +15,13 @@ HashTable<T>::HashTable(int NBuckets, HashFunction<T>* hashMethod)
     nBuckets = NBuckets;
     totalSize = 0;
 
-    buckets = new List<T> *[nBuckets]; //kayaskeuazoume ena pinaka apo listes
+    buckets = new List<T> *[nBuckets]; //kataskeuazoume ena pinaka apo listes
     for(int i = 0; i < nBuckets; i++)
     {
         buckets[i] = new List<T>();
     }
 
-    gFunction = hashMethod;
+    gFunction = hashMethod; //orizoume thn hash function
 }
 
 template <class T>
@@ -29,15 +29,13 @@ HashTable<T>::~HashTable()
 {
     for(int i = 0; i < nBuckets; i++)
     {
-        delete buckets[i]; //kai meta thn idia thn lista
-        //buckets[i] = NULL;
+        delete buckets[i];
     }
     delete []buckets;
-    //buckets = NULL;
 }
 
 template <class T>
-unsigned int HashTable<T>::hashFunction(T key) //allagh, elenxos an douleuei
+unsigned int HashTable<T>::hashFunction(T key) //apla epistrefei thn timh ths hash function
 {
     return gFunction->HashFunctionHash(key);
 }
@@ -61,108 +59,44 @@ HashFunction<T>* HashTable<T>::getHashFunction()
 }
 
 template <class T>
-Node<T>* HashTable<T>::get_bucket(T key)
-{ //epistregei thn lista pou antistixei se auto to bucket
-    return buckets[hashFunction(key)]->get_begin(); //mhpws douleuei xwris to ulong???
-}
-
-/*template <class T>
-T HashTable<T>::searchNode(int key)
+Node<T>* HashTable<T>::get_bucket(T key) //epistregei thn lista pou antistixei se auto to bucket
 {
-    Node<HashNode<T>*>* tmp = buckets[hashFunction(key)]->get_begin();
-
-    while(tmp != NULL)
-    {
-        if(tmp->get_data()->get_key() == key)
-        {
-            return tmp->get_data()->get_data();
-        }
-        tmp = tmp->get_next();
-    }
-    return NULL;
-}*/
+    return buckets[hashFunction(key)]->get_begin();
+}
 
 template <class T>
 void HashTable<T>::insertNode(T data)
 {
-    //if(searchNode(bAccount->getId()) != NULL) return false; //yparxei idi
     totalSize++;
-    buckets[hashFunction(data)]->insertEnd(data);
+    buckets[hashFunction(data)]->insertEnd(data); //vazei to stoixeio sthn thesi pou leei to hashfunction
 
 }
 
 
-//template <class T>
 template<>
-void HashTable<EuclideanNode*>::insertNode(EuclideanNode* data)
+void HashTable<EuclideanNode*>::insertNode(EuclideanNode* data) //sthn eukleidia ypologizw to ID kai to apothikeuw sto node
 {
     totalSize++;
-    //cout<<"TEST"<<endl;
     data->set_ID(gFunction->hashFunctionID(data));
-    cout<<hashFunction(data)<<" "<<nBuckets<<endl;
+
     buckets[hashFunction(data)]->insertEnd(data);
 
 }
 
-
-/*template<> //template<>
-void HashTable<EuclideanNode*>::insertNode(Vector* data)
-{
-    totalSize++;
-    int id = gFunction->hashFunctionID();
-
-    EuclideanNode* tmp = new EuclideanNode(data, id);
-    buckets[hashFunction(data)]->insertEnd(tmp); //me thn praksh tha glutwsw ypologismous
-}*/
-
-/*
 template <class T>
-T HashTable<T>::deleteNode(int key)
+bool HashTable<T>::checkEmpty()
 {
-    Node<HashNode<T>*>* tmp = buckets[hashFunction(key)]->get_begin();
-    HashNode<T>* delNode;
-    T returnValue;
-
-    while(tmp != NULL)
+    for(int i=0;i< nBuckets;i++)
     {
-        if(tmp->get_data()->get_key() == key)
+        if(buckets[i]->checkEmpty())
         {
-            totalSize--;
-            delNode = buckets[hashFunction(key)]->deleteNode(tmp);
-            returnValue = delNode->get_data();
-            delete delNode;
-
-            return returnValue;
-        }
-        tmp = tmp->get_next();
-    }
-
-    return NULL;
-}
-
-template <class T>
-T HashTable<T>::deleteFirstNode()
-{
-    Node<HashNode<T>*>* tmp;
-    HashNode<T>* delNode;
-    T returnValue;
-
-    for(int i =0; i < nBuckets; i++)
-    {
-        delNode = buckets[i]->deleteFirstNode();
-        if(delNode != NULL)
-        {
-            returnValue = delNode->get_data();
-            delete delNode;
-
-            return returnValue;
+            return true;
         }
     }
 
-    return NULL;
+    return false;
 }
 
-*/
 
 template <class T>
 void HashTable<T>::printSizeOfBuckets()
@@ -173,8 +107,10 @@ void HashTable<T>::printSizeOfBuckets()
     }
 }
 
-template class HashTable<int>;
+
+//template class HashTable<int>;
 template class HashTable<Vector*>;
 template class HashTable<Hamming*>;
 template class HashTable<EuclideanNode*>;
+template class HashTable<MatrixPoint*>;
 

@@ -16,7 +16,7 @@ class HashFunctionEuclidean
         HashFunctionEuclidean(int dim, int W);
         ~HashFunctionEuclidean();
 
-        int value(Vector* key);
+        int value(Vector* key); //epistrefei thn timh ths h
 };
 #endif
 

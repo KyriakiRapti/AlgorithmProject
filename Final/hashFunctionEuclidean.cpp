@@ -9,10 +9,10 @@ HashFunctionEuclidean::HashFunctionEuclidean(int dim, int W):dimensions(dim), w(
 
     for(int i =0; i<dimensions; i++)
     {
-        vVariable[i]=Marsaglia();
+        vVariable[i]=Marsaglia(); //tyxaio metavliti gauss
     }
 
-    while((tVar = randomNumberDouble(0, w))== w){}; //einai anoixto sto w
+    while((tVar = randomNumberDouble(0, w))== w){}; //einai anoixto diastima sto w, opote otan epistrefei w psaxnoume gia allo
 }
 HashFunctionEuclidean::~HashFunctionEuclidean()
 {

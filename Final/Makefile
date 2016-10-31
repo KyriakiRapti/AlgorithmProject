@@ -1,8 +1,8 @@
 # In  order  to  execute  this  "Makefile " just  type  "make "
-OBJS     = test.o bankAccount.o graph.o hashtable.o List.o Node.o edge.o
-SOURCE   = test.cpp bankAccount.cpp graph.cpp hashtable.cpp List.cpp Node.cpp edge.cpp
-HEADER   = bankAccount.h graph.h hashtable.h List.h Node.h edge.h
-OUT      = elegxos
+OBJS     = main.o euclideanNode.o hashFunction.o List.o Node.o hashFunctionCosine.o hashFunctionEuclidean.o hashFunctionMatrix.o hashtable.o lsh.o psedoRandomNumbers.o readFile.o 
+SOURCE   = main.cpp euclideanNode.cpp hashFunction.cpp List.cpp Node.cpp hashFunctionCosine.cpp hashFunctionEuclidean.cpp hashFunctionMatrix.cpp hashtable.cpp lsh.cpp psedoRandomNumbers.cpp readFile.cpp
+HEADER   = dataTypes.h euclideanNode.h hashFunction.h List.h Node.h hashFunctionCosine.h hashFunctionEuclidean.h hashFunctionMatrix.h hashtable.h lsh.h psedoRandomNumbers.h readFile.h
+OUT      = lsh
 CC       = g++
 FLAGS    = -g -c
 # -g  option  enables  debugging  mode
@@ -11,14 +11,14 @@ all: $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT)
 #  create/ compile  the  individual  files  >> separately <<
 
-test.o: test.cpp
-	$(CC) $(FLAGS) test.cpp
+main.o: main.cpp $(HEADER)
+	$(CC) $(FLAGS) main.cpp
 
-bankAccount.o: bankAccount.cpp bankAccount.h
-	$(CC) $(FLAGS) bankAccount.cpp
-
-graph.o: graph.cpp graph.h
-	$(CC) $(FLAGS) graph.cpp
+euclideanNode.o: euclideanNode.cpp euclideanNode.h
+	$(CC) $(FLAGS) euclideanNode.cpp
+	
+hashFunction.o: hashFunction.cpp hashFunction.h
+	$(CC) $(FLAGS) hashFunction.cpp
 
 hashtable.o: hashtable.cpp hashtable.h
 	$(CC) $(FLAGS) hashtable.cpp
@@ -29,8 +29,23 @@ List.o: List.cpp List.h
 Node.o: Node.cpp Node.h
 	$(CC) $(FLAGS) Node.cpp
 
-edge.o: edge.cpp edge.h
-	$(CC) $(FLAGS) edge.cpp
+hashFunctionCosine.o: hashFunctionCosine.cpp hashFunctionCosine.h
+	$(CC) $(FLAGS) hashFunctionCosine.cpp
+	
+hashFunctionEuclidean.o: hashFunctionEuclidean.cpp hashFunctionEuclidean.h
+	$(CC) $(FLAGS) hashFunctionEuclidean.cpp
+	
+hashFunctionMatrix.o: hashFunctionMatrix.cpp hashFunctionMatrix.h
+	$(CC) $(FLAGS) hashFunctionMatrix.cpp
+	
+lsh.o: lsh.cpp lsh.h
+	$(CC) $(FLAGS) lsh.cpp
+
+psedoRandomNumbers.o: psedoRandomNumbers.cpp psedoRandomNumbers.h
+	$(CC) $(FLAGS) psedoRandomNumbers.cpp
+
+readFile.o: readFile.cpp readFile.h
+	$(CC) $(FLAGS) readFile.cpp
 
 #  clean  house
 clean :

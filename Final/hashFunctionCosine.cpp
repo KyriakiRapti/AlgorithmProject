@@ -9,10 +9,8 @@ HashFunctionCosine::HashFunctionCosine(int dim):dimensions(dim)
 
     for(int i =0; i<dimensions; i++)
     {
-        rVariable[i]=Marsaglia();
-        cout<<rVariable[i]<<" ";
+        rVariable[i]=Marsaglia(); //tyxaio metavliti gauss
     }
-    cout<<endl;
 }
 
 HashFunctionCosine::~HashFunctionCosine()
@@ -22,25 +20,14 @@ HashFunctionCosine::~HashFunctionCosine()
 
 bool HashFunctionCosine::value(Vector* key)
 {
+   // if(key->get_dimensions() != dimensions) //sfalma
+
     double result=0;
 
-    for(int i =0; i<dimensions;i++) //isws elenxos an idia dimensions cosine kai rVariable
+    for(int i =0; i<dimensions;i++)//vriskw to eswteriko ginomeno
     {
         result += rVariable[i]*key->get_coordinance(i);
     }
 
-    return (result >= 0);
-}
-
-void HashFunctionCosine::stats()
-{
-    int counter = 0;
-    for(int i =0; i < dimensions; i++)
-    {
-        if(rVariable[i]> 0 )
-        {
-            counter++;
-        }
-    }
-    cout<<counter<<endl;
+    return (result >= 0); //an einai thetiko to bit einai 1
 }

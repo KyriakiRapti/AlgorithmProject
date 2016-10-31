@@ -7,6 +7,7 @@ class EuclideanNode
     private:
         Vector* data;
         int ID;
+
     public:
         EuclideanNode(Vector* Data);
         EuclideanNode(Vector* Data, int id);
@@ -14,6 +15,7 @@ class EuclideanNode
 
         Vector* get_vector();
         int get_ID();
+        std::string get_string();
 
         void set_ID(int id);
 };

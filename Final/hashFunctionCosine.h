@@ -13,8 +13,7 @@ class HashFunctionCosine
         HashFunctionCosine(int dim);
         ~HashFunctionCosine();
 
-        bool value(Vector* key); //prepei na epistrefei 0,1 1bit
-        void stats();
+        bool value(Vector* key); //epistrefei thn timh ths h 0 'h 1
 };
 #endif
 

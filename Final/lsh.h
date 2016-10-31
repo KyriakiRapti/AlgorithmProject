@@ -4,23 +4,23 @@
 #include <fstream>
 #include "dataTypes.h"
 #include "List.h"
-#include "hashTableCosine.h"
 #include "hashtable.h"
 
 template<class T>
 class LSH
 {
     private:
-        std::string type;
         const int L;
         const int K;
-        HashTable<T>** hashtables; //edw tha mpei template an ginete
-        //double radius;
-        List<T>* input; //kai edw
-        //List<T>* searchList;
+
+        HashTable<T>** hashtables;
+        List<T>* input;
+
+        bool elementExists(List<T>* tmpList, T key);
+        double EuclideanNNTrick(T key, T& aproxNear);
 
     public:
-        LSH(std::string Type, List<T>* Input, int L1, int K1);
+        LSH(List<T>* Input, int L1, int K1);
         ~LSH();
 
         void runLSH(std::ofstream& outFile, List<T>* Search, double radius);
@@ -28,17 +28,13 @@ class LSH
         void rangeSearch(T key, List<T>* result, double radius);
         double AproxNN(T key, T& aproxNear);
         double TrueNN(T key, T& aproxNear);
-        //Vector* NNCosine(HashTableCosine** hashtables, Vector* key, int L, double& distance, int maxChecks);
+
         double distance(Vector* point1, Vector* point2);
         int distance(Hamming* point1, Hamming* point2);
-        bool elementExists(List<T>* tmpList, T key);
+        double distance(EuclideanNode* point1, EuclideanNode* point2);
+        double distance(MatrixPoint* point1, MatrixPoint* point2);
+
 
 };
-/*
-void lshCosine(List<Vector*>* input, List<Vector*>* searchList, int L, int K, double radius);
-void writeFileCosine(std::ofstream& outFile, Vector* queryPoint, List<Vector*>* rangeNeigtbours, Vector* aproxVector, double aproxDistance,  double nearDistance);
-void rangeSearchCosine(HashTableCosine** hashtables, Vector* key, int L, double radius, List<Vector*>* result);
-Vector* NNCosine(HashTableCosine** hashtables, Vector* key, int L, double& distance, int maxChecks);
-*/
 
 #endif

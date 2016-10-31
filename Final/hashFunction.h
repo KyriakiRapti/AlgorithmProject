@@ -4,21 +4,23 @@
 #include "dataTypes.h"
 #include "euclideanNode.h"
 #include <bitset>
+#include "List.h"
 
 #include "hashFunctionCosine.h"
 #include "psedoRandomNumbers.h"
 #include "hashFunctionEuclidean.h"
+#include "hashFunctionMatrix.h"
 
 #define M 4294967291 //2^32-5
 
-template<class T>
+template<class T> //prototype gia thn hashFunction
 class HashFunction
 {
     private:
 
     public:
         HashFunction();
-        unsigned int HashFunctionHash(T key);
+        unsigned int HashFunctionHash(T key); //prepei na pairnei to key kai na epistrefei to bucket
 
 };
 
@@ -73,5 +75,24 @@ class HashFunction<EuclideanNode*>
 
         int hashFunctionID(EuclideanNode* key);
 };
-#endif // Included_HashFunction_H
+
+template<>
+class HashFunction<MatrixPoint*>
+{
+    private:
+        const int kHashFunctions;
+        HashFunctionMatrix** gFunction;
+
+        MatrixPoint* getPoint(List<MatrixPoint*>* myList, int pos);
+
+    public:
+        HashFunction(int K, List<MatrixPoint*>* myInput);
+        ~HashFunction();
+
+        unsigned int HashFunctionHash(MatrixPoint* key);
+
+};
+
+unsigned int modulo(int x1, int x2);
+#endif
 
