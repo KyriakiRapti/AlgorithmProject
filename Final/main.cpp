@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     initialize(); //arxikopoiei thn srand
 
-    if (argc != 7)
+    if (argc < 7 || argc > 11)
     {
         cout<<"Please give all attributes –d <input file> –q <query file> –k <int> -L <int> -ο <output file>"<<endl;
         exit(1);
@@ -62,13 +62,17 @@ int main(int argc, char *argv[])
             }
         }
     }
-
     if(inputFile == ""|| searchFile==""||outFile=="")
     {
         perror("Arguments dont match");
         exit(2);
     }
 
+    if(K>32)
+    {
+        perror("support up to 32 bits and 2^32 buckets");
+        exit(2);
+    }
     inFile.open(inputFile.c_str());
     queryFile.open(searchFile.c_str());
     outFile.open(outputFile.c_str());

@@ -35,7 +35,7 @@ HashTable<T>::~HashTable()
 }
 
 template <class T>
-unsigned int HashTable<T>::hashFunction(T key) //apla epistrefei thn timh ths hash function
+unsigned int HashTable<T>::hashFunction(T key) //epistrefei thn timh ths hash function
 {
     return gFunction->HashFunctionHash(key);
 }
@@ -84,7 +84,7 @@ void HashTable<EuclideanNode*>::insertNode(EuclideanNode* data) //sthn eukleidia
 }
 
 template <class T>
-bool HashTable<T>::checkEmpty()
+bool HashTable<T>::checkEmpty() //elenxei an einai keno to hashtable
 {
     for(int i=0;i< nBuckets;i++)
     {
@@ -99,7 +99,7 @@ bool HashTable<T>::checkEmpty()
 
 
 template <class T>
-void HashTable<T>::printSizeOfBuckets()
+void HashTable<T>::printSizeOfBuckets() //emfanizei to megethos tou kathe bucket
 {
     for(int i =0; i < nBuckets; i++)
     {

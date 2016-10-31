@@ -20,8 +20,6 @@ HashFunctionCosine::~HashFunctionCosine()
 
 bool HashFunctionCosine::value(Vector* key)
 {
-   // if(key->get_dimensions() != dimensions) //sfalma
-
     double result=0;
 
     for(int i =0; i<dimensions;i++)//vriskw to eswteriko ginomeno

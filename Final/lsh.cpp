@@ -65,6 +65,20 @@ LSH<EuclideanNode*>::LSH(List<EuclideanNode*>* Input, int L1, int K1):L(L1), K(K
         hashtables[i] = new HashTable<EuclideanNode*>(noBuckets, hashFunct);
     }
 
+    Node<EuclideanNode*>* node = input->get_begin();
+    EuclideanNode* tmpNode;
+    int sizeList = input->getSize();
+    for(int i =0; i <sizeList; i++) //vazoyme kathe stoixeio se ola ta hashtable pou ftiaksame
+    {
+        for(int j = 0; j < L; j++)
+        {
+            tmpNode = new EuclideanNode(node->get_data()->get_vector()); //ftiaxnw neo stoixeio giati se kathe table tha exoun diaforetiko ID
+            input->insertEnd(tmpNode); //to vazw se lista gia diagrafh argotera
+
+            hashtables[j]->insertNode(tmpNode);
+        }
+        node=node->get_next();
+    }
 }
 
 template <>
@@ -151,7 +165,6 @@ double LSH<EuclideanNode*>::EuclideanNNTrick(EuclideanNode* key, EuclideanNode*&
     EuclideanNode* minElement = NULL;
     double minDistance = std::numeric_limits<double>::max();
     double tmpDistance;
-    //int totalItems = 0;
 
     for(int i = 0; i < L; i++)
     {
@@ -180,23 +193,8 @@ void LSH<EuclideanNode*>::runLSH(std::ofstream& outFile, List<EuclideanNode*>* S
     EuclideanNode* aproxNear = NULL;
     EuclideanNode* trueNear = NULL;
     List<EuclideanNode*>* result= new List<EuclideanNode*>();
-    List<EuclideanNode*>* tmpList = new List<EuclideanNode*>();
-    EuclideanNode* tmpNode;
     clock_t begin, end;
     double LSHTime, BruteTime;
-
-    if(hashtables[0]->checkEmpty())  //an dn exoume eisagei ta dedomena eisodou na ta eisagoume
-    {
-        for(Node<EuclideanNode*>* i = input->get_begin(); i != NULL; i = i->get_next()) //vazoyme kathe stoixeio se ola ta hashtable pou ftiaksame
-        {
-            tmpNode = new EuclideanNode(i->get_data()->get_vector()); //ftiaxnw neo stoixeio giati se kathe table tha exoun diaforetiko ID
-            tmpList->insertEnd(tmpNode); //to vazw se lista gia diagrafh argotera
-            for(int j = 0; j < L; j++)
-            {
-                hashtables[j]->insertNode(tmpNode);
-            }
-        }
-    }
 
 
     for(Node<EuclideanNode*>* i = Search->get_begin(); i != NULL; i = i->get_next())
@@ -230,12 +228,6 @@ void LSH<EuclideanNode*>::runLSH(std::ofstream& outFile, List<EuclideanNode*>* S
 
     }
 
-    while((tmpNode = tmpList->deleteFirstNode()) != NULL) //diagrafw thn proswrinh lista kai ta dedomena ths
-    {
-        delete tmpNode;
-    }
-
-    delete tmpList;
     delete result;
 }
 
@@ -249,8 +241,17 @@ void LSH<T>::writeFile(std::ofstream& outFile, T queryPoint, List<T>* rangeNeigt
         outFile<<i->get_data()->get_string()<<endl;
     }
 
-    outFile << "Nearest neighbor: "<<aproxVector->get_string()<<endl;
-    outFile << "DistanceLSH: "<<aproxDistance<<endl;
+    if(aproxDistance == std::numeric_limits<double>::max()) //dn vrethike
+    {
+        outFile << "Nearest neighbor: not found"<<endl;
+        outFile << "DistanceLSH: not found"<<endl;
+    }
+    else
+    {
+        outFile << "Nearest neighbor: "<<aproxVector->get_string()<<endl;
+        outFile << "DistanceLSH: "<<aproxDistance<<endl;
+    }
+
     outFile << "DistanceTrue: "<<trueDistance<<endl;
     outFile << "tLSH: "<< LSHTime<<endl;
     outFile << "tTrue: " << bruteTime<<endl;
@@ -335,7 +336,7 @@ bool LSH<T>::elementExists(List<T>* tmpList, T key) //elenxei an yparxei hdh to 
 {
     for(Node<T>* i = tmpList->get_begin(); i!= NULL; i = i->get_next()) //pairnw ta stoixeia pou exoun elengthei
     {
-        if(i->get_data() == key)
+        if(i->get_data()->get_string() == key->get_string())
         {
             return true;
         }

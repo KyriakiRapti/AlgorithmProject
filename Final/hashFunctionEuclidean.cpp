@@ -23,7 +23,7 @@ int HashFunctionEuclidean::value(Vector* key)
 {
     double result=0;
 
-    for(int i =0; i<dimensions;i++) //isws elenxos an idia dimensions cosine kai rVariable
+    for(int i =0; i<dimensions;i++)
     {
         result += vVariable[i]*key->get_coordinance(i);
     }
