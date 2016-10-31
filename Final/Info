@@ -1,0 +1,1 @@
+g++  dataTypes.h hashFunctionCosine.cpp hashFunctionCosine.h hashTableCosine.cpp hashTableCosine.h List.cpp List.h Node.cpp Node.h psedoRandomNumbers.h psedoRandomNumbers.cpp test.cpp
